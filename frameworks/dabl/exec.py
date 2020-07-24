@@ -1,6 +1,9 @@
 import logging
+import numpy as np
+import pandas as pd
 from dabl import AnyClassifier
 from sklearn.ensemble import HistGradientBoostingRegressor
+from sklearn.ensemble import HistGradientBoostingClassifier
 from amlb.benchmark import TaskConfig
 from amlb.data import Dataset
 from amlb.datautils import impute
@@ -15,11 +18,15 @@ def run(dataset: Dataset, config: TaskConfig):
 
     is_classification = config.type == 'classification'
 
-    X_train, X_test = impute(dataset.train.X, dataset.test.X)
-    y_train, y_test = dataset.train.y, dataset.test.y
+    print(dataset.train.X)
+    
+    X_train, X_test = pd.DataFrame(dataset.train.X).astype(str), pd.DataFrame(dataset.test.X).astype(str)
+    y_train, y_test = pd.Series(dataset.train.y), pd.Series(dataset.test.y)
 
-    estimator = AnyClassifier if is_classification else HistGradientBoostingRegressor
-    predictor = estimator(random_state=config.seed, **config.framework_params)
+
+
+    estimator = AnyClassifier if is_classification else None
+    predictor = estimator(**config.framework_params)
 
     with Timer() as training:
         predictor.fit(X_train, y_train)

@@ -71,8 +71,6 @@ AutoWEKA:
 dabl:
   version: 'latest'
   project: https://github.com/dabl/dabl
-  params:
-    portfolio: 'mixed'
 
 H2OAutoML:
   version: '3.30.0.3'
